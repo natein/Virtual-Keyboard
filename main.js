@@ -111,7 +111,7 @@ class Keyboard {
   } 
   
   onKeyDown(evt) {
-    if(evt.code != "F12" && evt.code != "F5") evt.preventDefault();
+    if(evt.code != "F5") evt.preventDefault();
     let btn = document.querySelector('span[data-code="' + evt.code + '"]');
     if(btn == null) return;
     else btn.parentElement.classList.add('pushed');
@@ -145,7 +145,7 @@ class Keyboard {
   }
   
   onKeyUp(evt) {
-    if(evt.code != "F12" && evt.code != "F5") evt.preventDefault();
+    if(evt.code != "F5") evt.preventDefault();
     let btn = document.querySelector('span[data-code="' + evt.code + '"]');
     if(btn == null) return;
     else btn.parentElement.classList.remove("pushed");    
