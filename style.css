@@ -1,0 +1,85 @@
+html, body {
+  font-family: Arial san-serif;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  box-sizing: border-box;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  color: #000065;
+  text-align: center;
+}
+
+textarea {
+  display: block;
+  width: 960px;
+  height: 170px;
+  margin: 20px auto 20px;
+  border-radius: 25px;
+  background-color: #eef;
+  color: #000065;
+  font-size: 20px;
+  padding: 15px;
+  resize: none;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  width: 970px;
+  height: 320px;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 25px;
+  background-color: #0099ff;
+}
+
+.keyboard div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  margin-right: 5px;
+  background-color: #000065;
+  border-radius: 10px;  
+}
+
+.keyboard div.last {
+  margin-right: 0;
+}
+
+.keyboard div.long {
+  width: 125px;
+}
+
+.keyboard div.verylong {
+  width: 320px;
+}
+
+.upper {
+  position: absolute;
+  margin-left: -15px;
+  margin-top: -12px;
+}
+
+/* анимация при нажатии кнопки */
+.pushed {
+	  animation: push_button 0.3s;
+}
+
+@keyframes push_button {
+  0% {
+    background-color: #000065;
+  }
+  50% {
+      background-image: radial-gradient(#0099ff, #000065);
+  }
+  100% {
+    background-color: #000065;
+  }
+}
