@@ -119,7 +119,11 @@ class Keyboard {
       case "Backspace":
         this.input.innerHTML = this.input.innerHTML.slice(0, -1); break;
       case "Delete":
-        this.input.innerHTML = this.input.innerHTML.slice(0, 1); break;
+        if(this.input.innerHTML.startPosition != this.input.innerHTML.lenght) {
+          this.input.innerHTML = this.input.innerHTML.substring(0, this.input.innerHTML.startPosition) + 
+          this.input.innerHTML.substring(this.input.innerHTML.startPosition + 1, this.input.innerHTML.lenght);
+        }
+        break;
       case "Tab":
         this.input.innerHTML = this.input.innerHTML + "        "; break;
       case "Enter":
