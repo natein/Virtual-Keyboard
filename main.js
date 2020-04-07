@@ -44,7 +44,9 @@ class Keyboard {
   constructor() {     
     this.shiftState = false;
     this.capsState = false;
-    this.lang = localStorage.getItem("cur_language");
+    if(localStorage.getItem("cur_language") != undefined)
+      this.lang = localStorage.getItem("cur_language");
+    else this.lang = "en";
   }
 
   generateKeyboard() {
