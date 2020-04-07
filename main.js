@@ -84,6 +84,18 @@ class Keyboard {
     }    
   }
   
+  getCurrentKeyByCode(code) {
+    let len = KEY_CODES.length;
+    let index = 0;
+    for(let i = 0; i < len; i++) {
+      if(KEY_CODES[i] == code) {
+        index = i;
+        break;
+      }
+    }
+    return this.getCurrentKey(index);
+  }
+  
   changeKeyboardLayout() {
     let spans = document.querySelectorAll("span");    
     for(let i = 0; i < spans.length; i++){
@@ -92,10 +104,10 @@ class Keyboard {
   }  
   
   addListeners() {
-    document.addEventListener('keydown', this.onKeyDown);
-    document.addEventListener('keyup', this.onKeyUp);
-    document.addEventListener('mousedown', this.onMouseDown);
-    document.addEventListener('mouseup', this.onMouseUp);
+    document.addEventListener('keydown', (event) => this.onKeyDown(event));
+    document.addEventListener('keyup', (event) => this.onKeyUp(event));
+    document.addEventListener('mousedown', (event) => this.onMouseDown(event));
+    document.addEventListener('mouseup', (event) => this.onMouseUp(event));
   } 
   
   onKeyDown(evt) {
@@ -103,27 +115,122 @@ class Keyboard {
     let btn = document.querySelector('span[data-code="' + evt.code + '"]');
     if(btn == null) return;
     else btn.parentElement.classList.add('pushed');
-    let input = document.querySelector("textarea");
-    switch(evt.key) {
+    switch(evt.key) {        
       case "Backspace":
-        input.innerHTML = input.innerHTML.slice(0, -1); break;
-      case 'Tab':
-        input.innerHTML = input.innerHTML + '    '; break;
+        this.input.innerHTML = this.input.innerHTML.slice(0, -1); break;
+      case "Delete":
+        this.input.innerHTML = this.input.innerHTML.slice(0, 1); break;
+      case "Tab":
+        this.input.innerHTML = this.input.innerHTML + "        "; break;
+      case "Enter":
+        this.input.innerHTML = this.input.innerHTML + "\n"; break;
+      case " ":
+        this.input.innerHTML = this.input.innerHTML + " "; break;
+      case "Shift":
+        this.shiftState = true;
+        this.changeKeyboardLayout();
+        break;
+      case "Alt":      
+      case "Control":
+      case "CapsLock":      
+      case "Meta":
+        break;
       default:
-        input.innerHTML = input.innerHTML + evt.key;      
-    }
+        this.input.innerHTML = this.input.innerHTML + this.getCurrentKeyByCode(evt.code);      
+    }    
   }
   
   onKeyUp(evt) {
     if(evt.code != "F12" && evt.code != "F5") evt.preventDefault();
     let btn = document.querySelector('span[data-code="' + evt.code + '"]');
     if(btn == null) return;
-    else btn.parentElement.classList.remove("pushed");
+    else btn.parentElement.classList.remove("pushed");    
+
     if ((evt.code == "ShiftLeft" && evt.ctrlKey) || (evt.shiftKey && evt.code === "ControlLeft")) {
       if(this.lang == "rus") this.lang = "en";
       else this.lang = "rus";            
       localStorage.setItem("cur_language", this.lang);
       this.changeKeyboardLayout();
-    }     
+    }
+    if(evt.code == "CapsLock") {
+      this.capsState = !this.capsState;
+      this.changeKeyboardLayout();
+    }
+    
+    if(evt.code == "ShiftLeft" || evt.code == "ShiftRight") {
+        this.shiftState = false;
+        this.changeKeyboardLayout();
+    }
+  }
+  
+  onMouseDown(evt) {
+    evt.preventDefault();
+    let code = "";
+    if(evt.target.tagName == "DIV" || evt.target.tagName == "SPAN") {
+      if(evt.target.tagName == "DIV" && evt.target.className != "keyboard") {
+        evt.target.classList.add('pushed'); 
+        code = evt.target.firstChild.dataset.code;
+      }
+      if (evt.target.tagName == "SPAN") {
+        evt.target.parentElement.classList.add('pushed');
+        code = evt.target.dataset.code;
+      }
+    }
+    if(code != "") {
+      switch(code) {        
+        case "Backspace":
+          this.input.innerHTML = this.input.innerHTML.slice(0, -1); break;
+        case "Delete":
+          if(this.input.innerHTML.startPosition != this.input.innerHTML.lenght) {
+            this.input.innerHTML = this.input.innerHTML.substring(0, this.input.innerHTML.startPosition) + 
+            this.input.innerHTML.substring(this.input.innerHTML.startPosition + 1, this.input.innerHTML.lenght);
+          }
+          break;
+        case "Tab":
+          this.input.innerHTML = this.input.innerHTML + "        "; break;
+        case "Enter":
+          this.input.innerHTML = this.input.innerHTML + "\n"; break;
+        case "Space":
+          this.input.innerHTML = this.input.innerHTML + " "; break;
+        case "ShiftRight":
+        case "ShiftLeft":
+          this.shiftState = true;
+          this.changeKeyboardLayout();
+          break;
+        case "AltLeft":
+        case "AltRight":        
+        case "ControlLeft":
+        case "ControlRight":
+        case "CapsLock":      
+        case "MetaLeft":
+          break;
+        default:
+          this.input.innerHTML = this.input.innerHTML + this.getCurrentKeyByCode(code);      
+      }
+    }    
+  }
+  
+  onMouseUp(evt) {
+    evt.preventDefault();
+    let code = "";
+    if(evt.target.tagName == "DIV" || evt.target.tagName == "SPAN") {
+      if(evt.target.tagName == "DIV" && evt.target.className != "keyboard") {
+        evt.target.classList.remove('pushed');
+        code = evt.target.dataset.code;        
+      }
+       if (evt.target.tagName == "SPAN") {
+         evt.target.parentElement.classList.remove('pushed');
+         code = evt.target.dataset.code;
+       }
+    }
+    if(code == "CapsLock") {
+      this.capsState = !this.capsState;
+      this.changeKeyboardLayout();
+    }
+    
+    if(code == "ShiftLeft" || code == "ShiftRight") {
+        this.shiftState = false;
+        this.changeKeyboardLayout();
+    }
   }
 }

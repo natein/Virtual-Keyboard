@@ -41,11 +41,12 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
   width: 60px;
   height: 60px;
   margin-right: 5px;
   background-color: #000065;
-  border-radius: 10px;
+  border-radius: 10px;  
 }
 
 .keyboard div.last {
